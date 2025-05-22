@@ -1,42 +1,40 @@
-
-import React, { createContext, useState, useContext, ReactNode } from "react";
-
-interface User {
-  username: string;
-}
+// src/context/AuthContext.tsx
+import { createContext, useContext, useEffect, useState } from "react";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { auth } from "../firebase";
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => void;
-  logout: () => void;
+  loading: boolean;
+  logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  logout: async () => {},
+});
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (username: string, password: string) => {
-    // In a real app, this would validate credentials against a backend
-    // For now, accept any credentials as valid
-    setUser({ username });
-  };
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
 
-  const logout = () => {
-    setUser(null);
-  };
+    return () => unsubscribe();
+  }, []);
+
+  const logout = () => signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, loading, logout }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);

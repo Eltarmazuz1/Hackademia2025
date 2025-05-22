@@ -1,16 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { getUserTasks } from "../services/taskService";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const CategoryPage = () => {
-  const { category } = useParams(); // לקבל את שם הקטגוריה מה-URL
+  const { category } = useParams();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const tasks = getUserTasks(); // בהמשך תוכל לסנן לפי קטגוריה אם תרצה
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // שליפת מטלות לפי user.uid וקטגוריה
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchTasks = async () => {
+      try {
+        const q = query(
+          collection(db, "tasks"),
+          where("userId", "==", user.uid),
+          where("category", "==", category)
+        );
+        const querySnapshot = await getDocs(q);
+        const fetchedTasks = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTasks();
+  }, [user, category]);
 
   useEffect(() => {
     if (!user) {
@@ -18,8 +47,8 @@ const CategoryPage = () => {
     }
   }, [user, navigate]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/login");
   };
 
@@ -27,7 +56,7 @@ const CategoryPage = () => {
     navigate(`/task/${taskId}`);
   };
 
-  if (!user) return null;
+  if (!user || loading) return null;
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -35,7 +64,9 @@ const CategoryPage = () => {
         <div className="container mx-auto py-4 px-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold capitalize">{category} Tasks</h1>
           <div className="flex items-center gap-4">
-            <span className="text-gray-600">Welcome, {user.username}</span>
+            <span className="text-gray-600">
+              Welcome, {user.displayName || user.email}
+            </span>
             <Button variant="outline" onClick={handleLogout}>Logout</Button>
           </div>
         </div>
