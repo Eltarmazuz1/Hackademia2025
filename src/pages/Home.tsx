@@ -39,7 +39,7 @@ const Home = () => {
 
   const categories = [
     { name: "Calculus", path: "/category/calculus", image: "calculus.png" },
-    { name: "Algebra", path: "/category/algebra", image: "algebra.jpg" },
+    { name: "Algebra", path: "/category/algebra", image: "algebra.png" },
     { name: "Geometry", path: "/category/geometry", image: "geometry.png" },
   ];
 
