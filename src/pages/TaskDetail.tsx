@@ -5,12 +5,17 @@ import { useAuth } from "../context/AuthContext";
 import { getTaskById, Task } from "../services/taskService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { checkAnswer } from "../services/taskService";
+
 
 const TaskDetail = () => {
   const { taskId } = useParams<{ taskId: string }>();
   const [task, setTask] = useState<Task | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [answer, setAnswer] = useState(""); // 🆕 תשובה של המשתמש
+
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -31,7 +36,11 @@ const TaskDetail = () => {
   }, [taskId, user, navigate]);
 
   if (!user || !task) return null;
-
+  const handleSubmit = () => {
+    
+    console.log("Answer submitted:", answer);
+    alert(`Answer submitted: ${answer}`);
+    };
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow-sm">
@@ -47,17 +56,21 @@ const TaskDetail = () => {
             <CardTitle>{task.title}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p>This page is currently under development. More details about this task will be available soon.</p>
+            <p>{task.description}</p>
             
             {/* Basic task info for now */}
             <div className="mt-4 p-4 border border-gray-200 rounded-md bg-white">
-              <h3 className="font-semibold text-lg">Task Information</h3>
-              <div className="mt-2 space-y-2">
-                <p><strong>Status:</strong> {task.status}</p>
-                <p><strong>Due Date:</strong> {new Date(task.dueDate).toLocaleDateString()}</p>
-                <p><strong>Description:</strong> {task.description}</p>
-              </div>
-            </div>
+            <div className="mt-2 space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Your Answer:</label>
+              <Input
+                type="text"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                placeholder="Write your answer here..."
+                />
+              <Button onClick={handleSubmit}>Submit Answer</Button>
+            </div>  {/* <-- סגירת div פנימי */}
+          </div>    {/* <-- סגירת div חיצוני */}
           </CardContent>
         </Card>
       </main>
