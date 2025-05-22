@@ -22,7 +22,7 @@ const Home = () => {
   const categories = [
     { name: "Calculus", path: "/category/calculus", image: "calculus.jpg" },
     { name: "Algebra", path: "/category/algebra", image: "algebra.jpg" },
-    { name: "Geometry", path: "/category/geometry", image: "geometry.jpg" },
+    { name: "Geometry", path: "/category/geometry", image: "logo.jpg" },
   ];
 
   if (!user) return null;
@@ -42,19 +42,24 @@ const Home = () => {
       <main className="container mx-auto py-12 px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {categories.map((category) => (
           <Card 
-            key={category.name} 
-            className="cursor-pointer hover:shadow-lg transition-shadow" 
-            onClick={() => navigate(category.path)}
-          >
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">{category.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 text-center">
-                Explore tasks related to {category.name}.
-              </p>
-            </CardContent>
-          </Card>
+          key={category.name} 
+          className="cursor-pointer hover:shadow-lg transition-shadow" 
+          onClick={() => navigate(category.path)}
+        >
+          <img 
+            src={`/${category.image}`} 
+            alt={category.name} 
+            className="w-full h-40 object-cover rounded-t-md"
+          />
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">{category.name}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 text-center">
+              Explore tasks related to {category.name}.
+            </p>
+          </CardContent>
+        </Card>
         ))}
       </main>
     </div>

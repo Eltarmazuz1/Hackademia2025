@@ -1,9 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase"; 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 
 const Register = () => {
@@ -21,10 +31,10 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const { fullName, email, username, password, school, role } = formData;
 
-    const { fullName, email, username, password } = formData;
     if (!fullName || !email || !username || !password) {
       toast({
         title: "Error",
@@ -34,13 +44,37 @@ const Register = () => {
       return;
     }
 
-    toast({
-      title: "Success",
-      description: "You have registered successfully!",
-    });
+    try {
+      // יצירת המשתמש ב־Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    // בעתיד: הרשמה דרך Firebase
-    navigate("/home");
+
+      await updateProfile(user, { displayName: username });
+
+
+      await setDoc(doc(db, "users", user.uid), {
+        fullName,
+        email,
+        username,
+        school,
+        role,
+        createdAt: new Date(),
+      });
+
+      toast({
+        title: "Success",
+        description: "Registration successful!",
+      });
+
+      navigate("/home");
+    } catch (error: any) {
+      toast({
+        title: "Registration Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
