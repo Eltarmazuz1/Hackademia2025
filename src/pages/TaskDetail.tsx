@@ -14,7 +14,7 @@ const TaskDetail = () => {
   const [task, setTask] = useState<Task | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [answer, setAnswer] = useState(""); // 🆕 תשובה של המשתמש
+  const [answer, setAnswer] = useState(""); //  
 
 
   useEffect(() => {
@@ -40,6 +40,15 @@ const TaskDetail = () => {
     
     console.log("Answer submitted:", answer);
     alert(`Answer submitted: ${answer}`);
+    if (!taskId) return;
+
+    const isCorrect = checkAnswer(taskId, answer);
+
+      if (isCorrect) {
+    alert("Correct! ✅");
+  } else {
+    alert("Incorrect ❌ Try again.");
+  }
     };
   return (
     <div className="min-h-screen bg-gray-100">
@@ -56,21 +65,26 @@ const TaskDetail = () => {
             <CardTitle>{task.title}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p>{task.description}</p>
+          <p dangerouslySetInnerHTML={{ __html: task.description }} />
             
             {/* Basic task info for now */}
             <div className="mt-4 p-4 border border-gray-200 rounded-md bg-white">
-            <div className="mt-2 space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Your Answer:</label>
+              <div className="mt-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Your Answer:</label>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontWeight: "bold", fontSize: "16px" }}>x=</span>
               <Input
                 type="text"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Write your answer here..."
-                />
+                placeholder="Enter your answer"
+                style={{ width: "250px" }}
+              />
               <Button onClick={handleSubmit}>Submit Answer</Button>
-            </div>  {/* <-- סגירת div פנימי */}
-          </div>    {/* <-- סגירת div חיצוני */}
+            </div>
+
+            </div>  {}
+          </div>    {}
           </CardContent>
         </Card>
       </main>
