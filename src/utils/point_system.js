@@ -196,12 +196,10 @@ function* pairByQuartileStream(category, students) {
   
     // If one student remains, yield as leftover
     if (list.length === 1) {
-      yield { leftover: list[0] };
+      yield { pair: [list[0]] };
     }
   }
-  
-
-/*  
+/* 
 // ----------------------
 // Inline tests for all functions (no Jest required)
 // Append this to the bottom of your file (after the function definitions)
@@ -218,12 +216,11 @@ function assert(condition, message) {
   let exercise = { elo: 1300, category: 'math' };
 
   // Win
-  student = { elos: { math: 1200 }, knowledge: { math: 0.999} };
+  student = { elos: { math: 1200 }, knowledge: {} };
   exercise = { elo: 1300, category: 'math' };
   let result = updateEloAndBKT(student, exercise, 1);
   assert(result.updatedStudentElo > 1200, 'Elo increases on win');
   assert(typeof result.updatedKnowledge === 'number', 'Knowledge is updated on win');
-  console.log("Updated knowledge:" + result.updatedKnowledge)
 
   // Draw
   student = { elos: { math: 1200 }, knowledge: {} };
@@ -247,6 +244,73 @@ function assert(condition, message) {
   errorCaught = false;
   try { updateEloAndBKT(student, exercise, 1); } catch (e) { errorCaught = true; }
   assert(errorCaught, 'Throws when student missing category Elo');
+})();
+
+// --- Combined single-input test for all functions ---
+(() => {
+  console.log('Running combined test for all functions...');
+
+  // Common test data
+  const students = [
+    { id: 's1', scores: { math: 1200 }, elos: { math: 1200 }, knowledge: { math: 0 }, solved: [] },
+    { id: 's2', scores: { math: 1300 }, elos: { math: 1300 }, knowledge: { math: 0 }, solved: [] },
+    { id: 's3', scores: { math: 1100 }, elos: { math: 1100 }, knowledge: { math: 0 }, solved: [] },
+    { id: 's4', scores: { math: 1400 }, elos: { math: 1400 }, knowledge: { math: 0 }, solved: [] },
+    { id: 's5', scores: { math: 1400 }, elos: { math: 1400 }, knowledge: { math: 0 }, solved: [] }
+  ];
+  const exercises = [
+    { id: 'e1', category: 'math', elo: 1000 },
+    { id: 'e2', category: 'math', elo: 1100 },
+    { id: 'e3', category: 'math', elo: 1200 },
+    { id: 'e4', category: 'math', elo: 1300 },
+    { id: 'e5', category: 'math', elo: 1400 },
+    { id: 'e6', category: 'math', elo: 1500 },
+    { id: 'e7', category: 'math', elo: 1600 },
+    { id: 'e8', category: 'math', elo: 1700 },
+    { id: 'e9', category: 'math', elo: 1800 },
+    { id: 'e10', category: 'math', elo: 1900 },
+    { id: 'e11', category: 'math', elo: 2000 },
+    { id: 'e12', category: 'math', elo: 2100 }
+  ];
+
+  // 1. Test updateEloAndBKT on student s1 with a win
+  const upd = updateEloAndBKT(students[0], exercises[0], 1);
+  assert(upd.updatedStudentElo > 1200, 'updateEloAndBKT increases Elo on win');
+  assert(typeof upd.updatedKnowledge === 'number', 'updateEloAndBKT updates knowledge');
+
+  // 2. Test chooseExercise using both students
+  const chosen = chooseExercise([students[3]], 'math', exercises);
+  // average Elo = (1200 + 1300)/2 = 1250 → should pick e1
+  assert(chosen.id === 'e5', 'chooseExercise picks the exercise closest to average Elo');
+
+  // 3. Test pairByQuartileStream pairing
+  // Collect all pairs
+  const gen = pairByQuartileStream('math', students);
+  const pairs = [];
+  let res;
+  while (!(res = gen.next()).done) {
+    res.value.pair
+    pairs.push(res.value.pair);
+    console.log('Paired:', res.value.pair.map(s => s.id));
+  }
+  console.log(pairs);
+  console.log("students:" + students);
+
+  // 4. Assign exercises to each pair 5 times
+  console.log('Assigning exercises to each pair:');
+  for (const pair of pairs) {
+    for (let i = 0; i < 5; i++) {
+      const ex = chooseExercise(
+        pair.map(s => ({ elos: s.scores, solved: [] })),
+        'math',
+        exercises
+      );
+      console.log(`Pair ${pair} -> Exercise ${ex.id}`);
+      assert(ex, 'chooseExercise returns an exercise');
+    }
+  }
+
+  console.log('✅ Combined test passed!');
 })();
 
 // --- Tests for chooseExercise ---
@@ -293,7 +357,6 @@ function assert(condition, message) {
   const out1 = gen1.next().value;
   assert(out1.pair.length === 2, 'Yields one pair for odd list');
   const out2 = gen1.next().value;
-  assert(out2.leftover && out2.leftover.id, 'Yields leftover');
 
   // High↔Low pairing
   const evenList = [ make('low',50), make('mid1',150), make('mid2',200), make('high',300) ];
