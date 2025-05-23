@@ -16,6 +16,27 @@ const TaskDetail = () => {
   const navigate = useNavigate();
   const [answer, setAnswer] = useState(""); //  
 
+const HintSection = ({ hint }: { hint: string }) => {
+  const [showHint, setShowHint] = useState(false);
+
+  return (
+    <div className="mb-4">
+      <button
+        onClick={() => setShowHint(!showHint)}
+        className="mb-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        {showHint ? "Hide Hint" : "Show Hint"}
+      </button>
+
+      {showHint && (
+        <div className="p-3 border border-gray-300 rounded bg-yellow-50 text-gray-800">
+          <strong>Hint:</strong> {hint}
+        </div>
+      )}
+    </div>
+  );
+};
+
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -66,7 +87,9 @@ const TaskDetail = () => {
           </CardHeader>
           <CardContent className="space-y-4">
           <p dangerouslySetInnerHTML={{ __html: task.description }} />
-            
+            {task.hint && (
+            <HintSection hint={task.hint} />
+            )}
             {/* Basic task info for now */}
             <div className="mt-4 p-4 border border-gray-200 rounded-md bg-white">
               <div className="mt-2">

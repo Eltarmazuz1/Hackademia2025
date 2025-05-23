@@ -8,7 +8,7 @@ export interface Task {
   status: 'pending' | 'in-progress' | 'completed';
   dueDate: string;
   correctAnswer: string;
-
+  hint: string;
 }
 
 // Mock tasks data
@@ -19,7 +19,8 @@ const tasks: Task[] = [
     description: "x<sup>2</sup> − 6x + 9 = 0",
     status: "pending",
     dueDate: "2025-06-01",
-    correctAnswer: "3"
+    correctAnswer: "3",
+    hint: "This is a perfect square trinomial: (x - 3)² = 0",
   },
   {
     id: "2",
@@ -27,7 +28,8 @@ const tasks: Task[] = [
     description: "x<sup>2</sup> − 4x + 4 = 0",
     status: "in-progress",
     dueDate: "2025-05-25",
-    correctAnswer: "2"
+    correctAnswer: "2",
+    hint: "Look for a perfect square: (x - 2)² = 0",
   },
   {
     id: "3",
@@ -35,7 +37,8 @@ const tasks: Task[] = [
     description: "x<sup>2</sup> − 16x + 64 = 0",
     status: "pending",
     dueDate: "2025-05-28",
-    correctAnswer: "8"
+    correctAnswer: "8",
+    hint: "Perfect square trinomial: (x - 8)² = 0",
   },
   {
     id: "4",
@@ -43,7 +46,8 @@ const tasks: Task[] = [
     description: "x<sup>2</sup> − 18x + 81 = 0",
     status: "pending",
     dueDate: "2025-05-23",
-    correctAnswer: "9"
+    correctAnswer: "9",
+    hint: "This is (x - 9)² = 0",
   }
 ];
 
