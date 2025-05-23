@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { FaUsers } from "react-icons/fa";  // אייקון אנשים
 
 const Home = () => {
-  const { user, logout } = useAuth(); // זה Firebase user
+  const { user, logout } = useAuth();
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
@@ -16,7 +17,6 @@ const Home = () => {
       navigate("/login");
     }
   }, [user, navigate]);
-
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -51,8 +51,23 @@ const Home = () => {
         <div className="container mx-auto py-4 px-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Math Tasks</h1>
           <div className="flex items-center gap-4">
-            <Button variant="outline" onClick={() => navigate("/chat-with-your-mate")}>chat</Button>
-            <Button variant="outline" onClick={() => navigate("/chat-with-your-mate")}>AI agent</Button>
+        
+            <button
+              onClick={() => navigate("/matches")}
+              className="w-8 h-8 rounded-full bg-green-600 hover:bg-green-700 text-white flex items-center justify-center"
+              title="Matches"
+              aria-label="Matches"
+            >
+              <FaUsers size={20} />
+            </button>
+            <Button variant="outline" onClick={() => navigate("/chat-with-your-mate")}>
+              chat
+            </Button>
+
+            <Button variant="outline" onClick={() => navigate("/chat-with-your-mate")}>
+              AI agent
+            </Button>
+
             <span className="text-gray-600">
               Welcome, {username || "user"}
             </span>

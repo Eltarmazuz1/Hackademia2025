@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Matches from "./pages/Matches";
 import Register from "./pages/Register";
 import AddTaskPage from "./pages/AddTaskPage";
 import Home from "./pages/Home";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/matches" element={<Matches />} />
             <Route path="/add-task" element={<AddTaskPage />} />
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/task/:taskId" element={<TaskDetail />} />

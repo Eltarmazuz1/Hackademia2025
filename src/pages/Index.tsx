@@ -7,12 +7,12 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-center px-4">
       <img
-        src="logo.jpg"
+        src="logo.jpeg"
         alt="Welcome"
         className="w-full max-w-md rounded-lg shadow-md mb-8"
       />
 
-      <h1 className="text-4xl font-bold mb-4">Welcome to ...</h1>
+      <h1 className="text-4xl font-bold mb-4">Welcome to Math Maker</h1>
       <p className="text-gray-600 mb-6 text-lg">
         Practice math. Track progress. Find your perfect learning partner.
       </p>
