@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import TaskDetail from "./pages/TaskDetail";
 import { AuthProvider } from "./context/AuthContext";
+import ChatWithYourMate from "./pages/ChatWithYourMate";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/task/:taskId" element={<TaskDetail />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/chat-with-your-mate" element={<ChatWithYourMate/>}/>
           </Routes>
         </BrowserRouter>
       </AuthProvider>
