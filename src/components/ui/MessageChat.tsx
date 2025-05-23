@@ -2,6 +2,9 @@ import { Box, TextField, IconButton } from "@mui/material";
 import MessageBuble from '@/components/ui/MessageBuble';
 import { SendIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"; 
 
 type MessageBubbleProps = {
   text: string;
@@ -9,11 +12,16 @@ type MessageBubbleProps = {
 };
 const MessageChat = () => {
 
+  const [chatId, setChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<MessageBubbleProps[]>([]);
   const [input, setInput] = useState<String>('');
-  const sendMessage = () => {
+  const navigate = useNavigate();
+
+  const sendMessage = async () => {
     if (!input.trim()) return;
 
+    const payload = (chatId) ? {chatId, question: input}: {question: input};
+    
     console.log("Sending:", input);
     setMessages((oldMessages) => [
       ...oldMessages,
@@ -23,6 +31,16 @@ const MessageChat = () => {
       }
     ]);
     setInput(""); 
+    const response = await axios.post('http://localhost:3000/ask', payload)
+    setChatId(response.data.chatId)
+    console.log({response});
+    setMessages((oldMessages) => [
+      ...oldMessages,
+      {
+        text: `${response.data.response}`,
+        direction: "receive"
+      }
+    ]);
   };
   return (
     <Box
@@ -33,6 +51,7 @@ const MessageChat = () => {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E0E0E0",
+        position: "relative"
       }}
     >
       <Box
@@ -73,6 +92,15 @@ const MessageChat = () => {
           </IconButton>
         </Box>
       </Box>
+      <Box sx={{
+            position: "absolute",
+            top: 8,
+            left: 8,
+          }}>
+      <IconButton onClick={() => navigate(-1)}>
+        <ArrowBackIcon />
+      </IconButton>
+    </Box>
     </Box>
   );
 };
