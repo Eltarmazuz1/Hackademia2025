@@ -1,10 +1,14 @@
-// src/context/AuthContext.tsx
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import { auth } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
+
+interface ExtendedUser extends User {
+  role?: string;
+}
 
 interface AuthContextType {
-  user: User | null;
+  user: ExtendedUser | null;
   loading: boolean;
   logout: () => Promise<void>;
 }
@@ -16,12 +20,26 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<ExtendedUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // שלוף את המידע מה-collection של המשתמשים
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setUser({ ...currentUser, role: data.role }); // ⬅️ הוספת role
+        } else {
+          setUser(currentUser); // fallback
+        }
+      } else {
+        setUser(null);
+      }
+
       setLoading(false);
     });
 

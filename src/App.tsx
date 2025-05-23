@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AddTaskPage from "./pages/AddTaskPage";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import TaskDetail from "./pages/TaskDetail";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/add-task" element={<AddTaskPage />} />
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/task/:taskId" element={<TaskDetail />} />
             <Route path="*" element={<NotFound />} />

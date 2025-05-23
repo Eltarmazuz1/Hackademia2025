@@ -7,6 +7,7 @@ export interface Task {
   description: string;
   status: 'pending' | 'in-progress' | 'completed';
   dueDate: string;
+  category: string;
   correctAnswer: string;
   hint: string;
 }
@@ -20,6 +21,7 @@ const tasks: Task[] = [
     status: "pending",
     dueDate: "2025-06-01",
     correctAnswer: "3",
+    category: "algebra",
     hint: "This is a perfect square trinomial: (x - 3)² = 0",
   },
   {
@@ -29,6 +31,7 @@ const tasks: Task[] = [
     status: "in-progress",
     dueDate: "2025-05-25",
     correctAnswer: "2",
+    category: "algebra",
     hint: "Look for a perfect square: (x - 2)² = 0",
   },
   {
@@ -38,6 +41,7 @@ const tasks: Task[] = [
     status: "pending",
     dueDate: "2025-05-28",
     correctAnswer: "8",
+    category: "algebra",
     hint: "Perfect square trinomial: (x - 8)² = 0",
   },
   {
@@ -47,6 +51,7 @@ const tasks: Task[] = [
     status: "pending",
     dueDate: "2025-05-23",
     correctAnswer: "9",
+    category: "algebra",
     hint: "This is (x - 9)² = 0",
   }
 ];
