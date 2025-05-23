@@ -51,6 +51,8 @@ const Home = () => {
         <div className="container mx-auto py-4 px-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Math Tasks</h1>
           <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={() => navigate("/chat-with-your-mate")}>chat</Button>
+            <Button variant="outline" onClick={() => navigate("/chat-with-your-mate")}>AI agent</Button>
             <span className="text-gray-600">
               Welcome, {username || "user"}
             </span>

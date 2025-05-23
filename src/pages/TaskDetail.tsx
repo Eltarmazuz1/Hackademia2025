@@ -73,7 +73,7 @@ const TaskDetail = () => {
     }
   }, [taskId, user, navigate]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async () => { 
     if (!task) return;
 
     var isCorrect;
