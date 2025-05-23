@@ -3,6 +3,8 @@ import MessageBuble from '@/components/ui/MessageBuble';
 import { SendIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"; 
 
 type MessageBubbleProps = {
   text: string;
@@ -13,6 +15,8 @@ const MessageChat = () => {
   const [chatId, setChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<MessageBubbleProps[]>([]);
   const [input, setInput] = useState<String>('');
+  const navigate = useNavigate();
+
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -47,6 +51,7 @@ const MessageChat = () => {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#E0E0E0",
+        position: "relative"
       }}
     >
       <Box
@@ -87,6 +92,15 @@ const MessageChat = () => {
           </IconButton>
         </Box>
       </Box>
+      <Box sx={{
+            position: "absolute",
+            top: 8,
+            left: 8,
+          }}>
+      <IconButton onClick={() => navigate(-1)}>
+        <ArrowBackIcon />
+      </IconButton>
+    </Box>
     </Box>
   );
 };
