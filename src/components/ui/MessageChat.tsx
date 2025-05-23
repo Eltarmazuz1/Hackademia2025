@@ -19,7 +19,7 @@ const MessageChat = () => {
       ...oldMessages,
       {
         text: `${input}`,
-        direction: "receive"
+        direction: "send"
       }
     ]);
     setInput(""); 
